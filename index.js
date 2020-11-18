@@ -118,12 +118,28 @@ let convertObjectToClass = function(className, obj) {
     for (let idx in propers) {
         let prop = propers[idx];
         if (prop.isArray) {
-            output += `  List<${prop.propertyType}> ${prop.propertyName};\n\n`;
+            output += `  List<${prop.propertyType}> ${prop.propertyName} = List<${prop.propertyType}>();\n\n`;
         } else {
-            output += `  ${prop.propertyType} ${prop.propertyName};\n\n`;
+        	switch (prop.propertyType) {
+        		case "double":
+	        		output += `  ${prop.propertyType} ${prop.propertyName} = 0;\n\n`;
+	        		break;
+	        	case "String":
+	        		output += `  ${prop.propertyType} ${prop.propertyName} = "";\n\n`;
+	        		break;
+	        	case "bool":
+	        		output += `  ${prop.propertyType} ${prop.propertyName} = false;\n\n`;
+	        		break;
+	        	default:
+	        		output += `  ${prop.propertyType} ${prop.propertyName} = ${prop.propertyType}();\n\n`;
+	        		break;
+        	}
         }
     }
 
+    // -- 生成默认构造方法
+    output += `  ${className}();\n\n`
+    
     // -- 生成FromJson方法
     output += `  ${className}.fromJson(Map<String, dynamic> json) {\n\n`;
     for (let idx in propers) {
