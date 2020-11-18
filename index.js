@@ -17,7 +17,7 @@ let onJsonChange = function() {
 let generatePropertyName = function(name) {
     let nameParts = name.split("_");
 
-    let output = nameParts[0].length;
+    let output = nameParts[0];
     for (let index = 1; index < nameParts.length; index++) {
         output += nameParts[index].substring(0, 1).toUpperCase() + nameParts[index].substring(1)
     }
