@@ -17,7 +17,7 @@ let onJsonChange = function() {
 let generatePropertyName = function(name) {
     let nameParts = name.split("_");
 
-    let output = nameParts[0];
+    let output = nameParts[0].length;
     for (let index = 1; index < nameParts.length; index++) {
         output += nameParts[index].substring(0, 1).toUpperCase() + nameParts[index].substring(1)
     }
@@ -144,7 +144,17 @@ let convertObjectToClass = function(className, obj) {
     output += `  ${className}.fromJson(Map<String, dynamic> json) {\n\n`;
     for (let idx in propers) {
         let prop = propers[idx];
-        output += `    if (json["${prop.key}"] != null) {\n`
+
+        // -- 类型检测
+        if (prop.isArray) {
+            output += `    if (json["${prop.key}"] != null && json["${prop.key}"] is List) {\n`
+        } else if (prop.isSubclass) {
+            output += `    if (json["${prop.key}"] != null && json["${prop.key}"] is Map) {\n`
+        } else if (prop.propertyType == "double") {
+            output += `    if (json["${prop.key}"] != null && (json["${prop.key}"] is int || json["${prop.key}"] is double)) {\n`
+        } else {
+            output += `    if (json["${prop.key}"] != null && json["${prop.key}"] is ${prop.propertyType}) {\n`
+        }
 
         if (prop.isArray) {
             if (prop.isSubclass) {
