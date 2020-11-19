@@ -23,7 +23,7 @@ let generatePropertyName = function(name) {
     }
 
     if (keywrodList.indexOf(output) != -1) {
-        output = "m" + output.toUpperCase();
+        output = "m" + output.substring(0, 1).toUpperCase() + output.substring(1);
     }
     return output;
 }
